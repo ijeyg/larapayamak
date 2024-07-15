@@ -2,11 +2,10 @@
 
 namespace Ijeyg\Larapayamak\Tests;
 
-use Ijeyg\Larapayamak\LarapayamakServiceProvider;
 use Ijeyg\Larapayamak\Services\SmsService;
 use Illuminate\Support\Facades\Config;
 
-class SmsirServiceTest extends TestCase
+class SmsirTest extends TestCase
 {
     public function test_send_simple_sms()
     {
@@ -19,6 +18,8 @@ class SmsirServiceTest extends TestCase
     {
         // Use invalid configuration by switching config
         Config::set('larapayamak', Config::get('larapayamak.invalid'));
+
+        $this->expectException(\Exception::class);
 
         // Attempt to use the SmsService with invalid configuration
         $smsService = $this->app->make(SmsService::class);
