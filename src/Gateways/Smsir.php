@@ -1,26 +1,31 @@
 <?php
 
-namespace Ijeyg\Larapayamak\Services;
+namespace Ijeyg\Larapayamak\Gateways;
 
 use Ijeyg\Larapayamak\Contracts\SmsProviderInterface;
 
-class SmsirProvider implements SmsProviderInterface
+class Smsir extends SmsProviderInterface
 {
-    private HttpClientService $httpClientService;
     private mixed $username;
     private mixed $line;
     private mixed $token;
 
     private string $baseUrl = 'https://api.sms.ir/v1/';
 
-    public function __construct(HttpClientService $httpClientService, $username, $line, $token)
+    public function __construct($username, $line, $token)
     {
-        $this->httpClientService = $httpClientService;
+        parent::__construct();
         $this->username = $username;
         $this->line = $line;
         $this->token = $token;
     }
 
+    /**
+     * @param $phoneNumber
+     * @param $message
+     * @return array|mixed
+     * @throws \Exception
+     */
     public function sendSimpleMessage($phoneNumber, $message)
     {
         $data = [

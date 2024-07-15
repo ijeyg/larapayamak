@@ -1,24 +1,23 @@
 <?php
 
-namespace Ijeyg\Larapayamak\Utils;
+namespace Ijeyg\Larapayamak\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Http;
 
-class Client
+class HttpClientService
 {
     /**
      * @param $url
      * @param $parameters
-     * @return string
+     * @param $headers
+     * @return array|mixed
      * @throws \Exception
      */
-    public function connectViaPost($url, $parameters = []): string
+    public function connectViaGet($url, $parameters = [], $headers = []): mixed
     {
         try {
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', $url, $parameters);
-            return $response->getBody()->getContents();
-        } catch (GuzzleException $e) {
+            return Http::withHeaders($headers)->get($url,$parameters)->json();
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode(), $e);
         }
     }

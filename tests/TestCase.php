@@ -1,36 +1,43 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Ijeyg\Larapayamak\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
+use Ijeyg\Larapayamak\LarapayamakServiceProvider;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'VendorName\\Skeleton\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-    }
-
     protected function getPackageProviders($app)
     {
         return [
-            SkeletonServiceProvider::class,
+            LarapayamakServiceProvider::class,
         ];
     }
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        // Correct configuration
+        $app['config']->set('larapayamak', [
+            'default' => 'smsir',
+            'gateways' => [
+                'smsir' => [
+                    'username' => "09374837726",
+                    'token' => "I5753zYoTx3ysROB5KJUV3uh6GWFGGzICE3dwECz5VArZAm1pIuyPk1IcNPDLSXI",
+                    'line' => 30007487126685,
+                ],
+            ],
+        ]);
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_skeleton_table.php.stub';
-        $migration->up();
-        */
+        // Incorrect configuration
+        $app['config']->set('larapayamak.invalid', [
+            'default' => 'invalid_gateway',
+            'gateways' => [
+                'smsir' => [
+                    'username' => "09374837726",
+                    'token' => "I5753zYoTx3ysROB5KJUV3uh6GWFGGzICE3dwECz5VArZAm1pIuyPk1IcNPDLSXI",
+                    'line' => 'invalid_line_value',
+                ],
+            ],
+        ]);
     }
 }

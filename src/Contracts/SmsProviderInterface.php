@@ -1,8 +1,17 @@
 <?php
 
-namespace Ijeyg\Larapayamak\Services;
+namespace Ijeyg\Larapayamak\Contracts;
 
-interface SmsProviderInterface
+use Ijeyg\Larapayamak\Services\HttpClientService;
+
+abstract class SmsProviderInterface
 {
-    public function send($phoneNumber, $message);
+    protected HttpClientService $httpClientService;
+
+    protected function __construct()
+    {
+        $this->httpClientService = new HttpClientService();
+    }
+
+    public abstract function sendSimpleMessage($phoneNumber, $message);
 }
