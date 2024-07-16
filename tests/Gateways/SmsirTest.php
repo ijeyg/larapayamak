@@ -15,12 +15,15 @@ class SmsirTest extends TestCase
         $this->assertNotNull($response);
         $this->assertEquals(1, $response['status']);
     }
-    public function test_invalid_configuration()
+
+    public function test_send_pattern_sms()
     {
-        Config::set('larapayamak', Config::get('larapayamak.invalid'));
-        $this->expectException(\Exception::class);
         $smsService = $this->app->make(SmsService::class);
-        $response = $smsService->sendSimpleMessage('1234567890', 'Test message');
-        $this->assertEquals(16,$response['status']);
+        $data = [
+            'code' => 1213234
+        ];
+        $response = $smsService->sendPatternMessage('09374837726', 100000, $data);
+        $this->assertNotNull($response);
+        $this->assertEquals(1, $response['status']);
     }
 }

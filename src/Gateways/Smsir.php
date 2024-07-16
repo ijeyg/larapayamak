@@ -26,21 +26,43 @@ class Smsir extends SmsProviderInterface
      * @return array|mixed
      * @throws \Exception
      */
-    public function sendSimpleMessage($phoneNumber, $message)
+    public function sendSimpleMessage($phoneNumber, $message): mixed
     {
-        $data = [
-            'password' => $this->token,
-            'username' => $this->username,
-            'line' => $this->line,
-            'mobile' => $phoneNumber,
-            'text' => $message,
-        ];
-        $header = [
-            'Accept' => 'application/json',
-            'X-API-KEY' => $this->token,
-        ];
         try {
-            return $this->httpClientService->connectViaGet($this->baseUrl . 'send', $data , $header);
+            return $this->httpClientService->connectViaGet($this->baseUrl . 'send', [
+                'password' => $this->token,
+                'username' => $this->username,
+                'line' => $this->line,
+                'mobile' => $phoneNumber,
+                'text' => $message,
+            ], [
+                'Accept' => 'application/json',
+                'X-API-KEY' => $this->token,
+            ]);
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+
+    /**
+     * @param $phoneNumber
+     * @param $pattern
+     * @param $parameters
+     * @return mixed
+     * @throws \Exception
+     */
+    public function sendPatternMessage($phoneNumber, $pattern, $parameters): mixed
+    {
+        try {
+            return $this->httpClientService->connectViaPost($this->baseUrl . 'send/verify', [
+                'Parameters' => $this->setParameters($parameters),
+                'Mobile' => $phoneNumber,
+                'TemplateId' => $pattern,
+            ], [
+                'Accept' => 'application/json',
+                'X-API-KEY' => $this->token,
+            ]);
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
         }

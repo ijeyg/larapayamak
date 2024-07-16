@@ -14,4 +14,7 @@ abstract class SmsProviderInterface
     }
 
     public abstract function sendSimpleMessage($phoneNumber, $message);
+
+    public abstract function sendPatternMessage($phoneNumber,$pattern,$parameters);
+
 }

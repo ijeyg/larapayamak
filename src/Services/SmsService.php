@@ -17,4 +17,9 @@ class SmsService
     {
         return $this->provider->sendSimpleMessage($phoneNumber, $message);
     }
+
+    public function sendPatternMessage($phoneNumber,$pattern,$parameters)
+    {
+        return $this->provider->sendPatternMessage($phoneNumber,$pattern,$parameters);
+    }
 }
