@@ -30,8 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "ijeyg\\Larapayamak\\": "src/",
-            "ijeyg\\Larapayamak\\Database\\Factories\\": "database/factories/"
+            "Ijeyg\\Larapayamak\\": "src/",
+            "Ijeyg\\Larapayamak\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
@@ -68,10 +68,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "ijeyg\\Larapayamak\\LarapayamakServiceProvider"
+                "Ijeyg\\Larapayamak\\LarapayamakServiceProvider"
             ],
             "aliases": {
-                "Larapayamak": "ijeyg\\Larapayamak\\Facades\\Larapayamak"
+                "Larapayamak": "Ijeyg\\Larapayamak\\Facades\\Larapayamak"
             }
         }
     },

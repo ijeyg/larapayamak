@@ -11,6 +11,6 @@ class Larapayamak extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \ijeyg\Larapayamak\Larapayamak::class;
+        return 'larapayamak';
     }
 }
