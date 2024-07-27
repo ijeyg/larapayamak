@@ -11,11 +11,6 @@ class LarapayamakServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
             ->name('larapayamak')
             ->hasConfigFile();
@@ -27,6 +22,10 @@ class LarapayamakServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(SmsService::class, function ($app) {
             return new SmsService($this->createSmsProvider($app));
+        });
+
+        $this->app->singleton('larapayamak', function ($app) {
+            return $app->make(SmsService::class);
         });
     }
 

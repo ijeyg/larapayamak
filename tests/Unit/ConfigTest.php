@@ -1,8 +1,9 @@
 <?php
 
-namespace Ijeyg\Larapayamak\Tests;
+namespace Ijeyg\Larapayamak\Tests\Unit;
 
 use Ijeyg\Larapayamak\Services\SmsService;
+use Ijeyg\Larapayamak\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 
 class ConfigTest extends TestCase

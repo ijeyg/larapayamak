@@ -2,9 +2,13 @@
 
 namespace Ijeyg\Larapayamak\Gateways;
 
-use Ijeyg\Larapayamak\Contracts\SmsProviderInterface;
+use Exception;
+use Ijeyg\Larapayamak\Contracts\AbstractSmsProvider;
+use Ijeyg\Larapayamak\Services\HttpClientService;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class Smsir extends SmsProviderInterface
+class Smsir extends AbstractSmsProvider
 {
     private mixed $username;
     private mixed $line;
@@ -14,22 +18,16 @@ class Smsir extends SmsProviderInterface
 
     public function __construct($username, $line, $token)
     {
-        parent::__construct();
+        parent::setHttpClient(new HttpClientService());
         $this->username = $username;
         $this->line = $line;
         $this->token = $token;
     }
 
-    /**
-     * @param $phoneNumber
-     * @param $message
-     * @return array|mixed
-     * @throws \Exception
-     */
-    public function sendSimpleMessage($phoneNumber, $message): mixed
+    public function sendSimpleMessage($phoneNumber, $message): JsonResponse
     {
         try {
-            return $this->httpClientService->connectViaGet($this->baseUrl . 'send', [
+            $response = $this->httpClientService->connectViaGet($this->baseUrl . 'send', [
                 'password' => $this->token,
                 'username' => $this->username,
                 'line' => $this->line,
@@ -39,23 +37,34 @@ class Smsir extends SmsProviderInterface
                 'Accept' => 'application/json',
                 'X-API-KEY' => $this->token,
             ]);
-        } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
+            if ($response['status'] !== 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $response['message']
+                ], status: Response::HTTP_BAD_REQUEST);
+            }
+            return response()->json([
+                'success' => true
+            ], status: Response::HTTP_OK);
+
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage()
+            ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
 
     /**
      * @param $phoneNumber
      * @param $pattern
      * @param $parameters
-     * @return mixed
-     * @throws \Exception
+     * @return JsonResponse
      */
-    public function sendPatternMessage($phoneNumber, $pattern, $parameters): mixed
+    public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
     {
         try {
-            return $this->httpClientService->connectViaPost($this->baseUrl . 'send/verify', [
+            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'send/verify', [
                 'Parameters' => $this->setParameters($parameters),
                 'Mobile' => $phoneNumber,
                 'TemplateId' => $pattern,
@@ -63,8 +72,21 @@ class Smsir extends SmsProviderInterface
                 'Accept' => 'application/json',
                 'X-API-KEY' => $this->token,
             ]);
-        } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
+            if ($response['status'] !== 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $response['message']
+                ], status: Response::HTTP_BAD_REQUEST);
+            }
+            return response()->json([
+                'success' => true,
+             ], status: Response::HTTP_OK);
+
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage()
+            ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -76,7 +98,7 @@ class Smsir extends SmsProviderInterface
     {
         $array = null;
         foreach ($parameters as $key => $value) {
-            $array[] = ['Name' => $key , 'Value'=> $value];
+            $array[] = ['Name' => $key, 'Value' => $value];
         }
         return $array;
     }

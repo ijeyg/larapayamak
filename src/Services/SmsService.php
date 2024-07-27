@@ -3,6 +3,7 @@
 namespace Ijeyg\Larapayamak\Services;
 
 use Ijeyg\Larapayamak\Contracts\SmsProviderInterface;
+use Illuminate\Http\JsonResponse;
 
 class SmsService
 {
@@ -13,12 +14,12 @@ class SmsService
         $this->provider = $provider;
     }
 
-    public function sendSimpleMessage($phoneNumber, $message)
+    public function sendSimpleMessage($phoneNumber, $message): JsonResponse
     {
         return $this->provider->sendSimpleMessage($phoneNumber, $message);
     }
 
-    public function sendPatternMessage($phoneNumber,$pattern,$parameters)
+    public function sendPatternMessage($phoneNumber,$pattern,$parameters): JsonResponse
     {
         return $this->provider->sendPatternMessage($phoneNumber,$pattern,$parameters);
     }

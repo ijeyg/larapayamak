@@ -8,12 +8,12 @@ class HttpClientService
 {
     /**
      * @param $url
-     * @param $parameters
-     * @param $headers
+     * @param array $parameters
+     * @param array $headers
      * @return array|mixed
      * @throws \Exception
      */
-    public function connectViaGet($url, $parameters = [], $headers = []): mixed
+    public function connectViaGet($url, array $parameters = [], array $headers = []): mixed
     {
         try {
             return Http::withHeaders($headers)->get($url,$parameters)->json();
@@ -24,12 +24,12 @@ class HttpClientService
 
     /**
      * @param $url
-     * @param $parameters
-     * @param $headers
+     * @param array $parameters
+     * @param array $headers
      * @return array|mixed
      * @throws \Exception
      */
-    public function connectViaPost($url, $parameters = [], $headers = []): mixed
+    public function connectViaPost($url, array $parameters = [], array $headers = []): mixed
     {
         try {
             return Http::withHeaders($headers)->post($url,$parameters)->json();

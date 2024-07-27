@@ -2,19 +2,12 @@
 
 namespace Ijeyg\Larapayamak\Contracts;
 
-use Ijeyg\Larapayamak\Services\HttpClientService;
+use Illuminate\Http\JsonResponse;
 
-abstract class SmsProviderInterface
+interface SmsProviderInterface
 {
-    protected HttpClientService $httpClientService;
+    public function sendSimpleMessage($phoneNumber, $message): JsonResponse;
 
-    protected function __construct()
-    {
-        $this->httpClientService = new HttpClientService();
-    }
-
-    public abstract function sendSimpleMessage($phoneNumber, $message);
-
-    public abstract function sendPatternMessage($phoneNumber,$pattern,$parameters);
+    public function sendPatternMessage($phoneNumber,$pattern,$parameters): JsonResponse;
 
 }
