@@ -2,6 +2,7 @@
 
 namespace Ijeyg\Larapayamak\Tests\Unit\Gateways;
 
+use Ijeyg\Larapayamak\Gateways\Farapayamak;
 use Ijeyg\Larapayamak\Gateways\Smsir;
 use Ijeyg\Larapayamak\Services\HttpClientService;
 use Ijeyg\Larapayamak\Tests\TestCase;
@@ -9,17 +10,18 @@ use Mockery;
 use PHPStan\BetterReflection\Reflection\Adapter\ReflectionClass;
 
 
-class SmsirTest extends TestCase
+class FarapayamakTest extends TestCase
 {
+
     public function getEnvironmentSetUp($app)
     {
         // Correct configuration
         $app['config']->set('larapayamak', [
             'default' => 'farapayamak',
             'gateways' => [
-                'smsir' => [
+                'farapayamak' => [
                     'username' => "",
-                    'token' => "",
+                    'password' => "",
                     'line' =>"",
                 ],
             ],
@@ -36,11 +38,11 @@ class SmsirTest extends TestCase
     {
         // Arrange
         $mockHttpClient = Mockery::mock(HttpClientService::class);
-        $mockHttpClient->shouldReceive('connectViaGet')
+        $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['status' => 1]); // Simulate a successful response
+            ->andReturn(['RetStatus' => 1]); // Simulate a successful response
 
-        $smsir = new Smsir('test_username', 'test_line', 'test_token');
+        $smsir = new Farapayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -60,11 +62,11 @@ class SmsirTest extends TestCase
     {
         // Arrange
         $mockHttpClient = Mockery::mock(HttpClientService::class);
-        $mockHttpClient->shouldReceive('connectViaGet')
+        $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['status' => 10]); // Simulate unsuccessful response
+            ->andReturn(['RetStatus' => 10]); // Simulate unsuccessful response
 
-        $smsir = new Smsir('test_username', 'test_line', 'test_token');
+        $smsir = new Farapayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -86,10 +88,10 @@ class SmsirTest extends TestCase
         $mockHttpClient = Mockery::mock(HttpClientService::class);
         $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['status' => 1]); // Simulate a successful response
+            ->andReturn(['RetStatus' => 1]); // Simulate a successful response
 
         $parameters = ['name' => 'John Doe'];
-        $smsir = new Smsir('test_username', 'test_line', 'test_token');
+        $smsir = new Farapayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -111,10 +113,10 @@ class SmsirTest extends TestCase
         $mockHttpClient = Mockery::mock(HttpClientService::class);
         $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['status' => 10]); // Simulate unsuccessful response
+            ->andReturn(['RetStatus' => 10]); // Simulate unsuccessful response
 
         $parameters = ['name' => 'John Doe'];
-        $smsir = new Smsir('test_username', 'test_line', 'test_token');
+        $smsir = new Farapayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -132,17 +134,14 @@ class SmsirTest extends TestCase
      */
     public function it_sets_parameters_correctly()
     {
-        $smsir = new Smsir('test_username', 'test_line', 'test_token');
+        $smsir = new Farapayamak('test_username', 'test_line', 'test_token');
 
         $reflection = new \ReflectionClass($smsir);
         $method = $reflection->getMethod('setParameters');
         $method->setAccessible(true);
 
         $parameters = ['name' => 'John Doe', 'code' => '1234'];
-        $expected = [
-            ['Name' => 'name', 'Value' => 'John Doe'],
-            ['Name' => 'code', 'Value' => '1234']
-        ];
+        $expected = 'John Doe;1234';
 
         $result = $method->invokeArgs($smsir, [$parameters]);
 
