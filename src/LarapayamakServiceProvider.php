@@ -2,6 +2,7 @@
 
 namespace Ijeyg\Larapayamak;
 
+use Ijeyg\Larapayamak\Gateways\Farapayamak;
 use Ijeyg\Larapayamak\Gateways\Smsir;
 use Ijeyg\Larapayamak\Services\SmsService;
 use Spatie\LaravelPackageTools\Package;
@@ -39,11 +40,11 @@ class LarapayamakServiceProvider extends PackageServiceProvider
         }
 
         switch ($defaultGateway) {
-            case 'smsir':
-                return new Smsir(
+            case 'farapayamak':
+                return new Farapayamak(
                     $providerConfig['username'],
                     $providerConfig['line'],
-                    $providerConfig['token']
+                    $providerConfig['password']
                 );
             default:
                 return new Smsir(
