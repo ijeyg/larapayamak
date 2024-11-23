@@ -13,6 +13,11 @@ return [
             'username' => env('FARAPAYAMAK_USERNAME', ''),
             'password' => env('FARAPAYAMAK_PASSWORD', ''),
             'line' => env('FARAPAYAMAK_LINE','' ),
+        ],
+        'melipayamak' => [
+            'username' => env('FARAPAYAMAK_USERNAME', ''),
+            'password' => env('FARAPAYAMAK_PASSWORD', ''),
+            'line' => env('FARAPAYAMAK_LINE','' ),
         ]
     ],
 ];

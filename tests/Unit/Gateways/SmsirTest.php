@@ -6,8 +6,6 @@ use Ijeyg\Larapayamak\Gateways\Smsir;
 use Ijeyg\Larapayamak\Services\HttpClientService;
 use Ijeyg\Larapayamak\Tests\TestCase;
 use Mockery;
-use PHPStan\BetterReflection\Reflection\Adapter\ReflectionClass;
-
 
 class SmsirTest extends TestCase
 {
