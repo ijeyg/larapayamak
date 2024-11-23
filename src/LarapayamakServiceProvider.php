@@ -46,6 +46,12 @@ class LarapayamakServiceProvider extends PackageServiceProvider
                     $providerConfig['line'],
                     $providerConfig['password']
                 );
+            case 'melipayamak':
+                return new Farapayamak(
+                    $providerConfig['username'],
+                    $providerConfig['line'],
+                    $providerConfig['password']
+                );
             default:
                 return new Smsir(
                     $providerConfig['username'],
