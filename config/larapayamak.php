@@ -18,6 +18,11 @@ return [
             'username' => env('FARAPAYAMAK_USERNAME', ''),
             'password' => env('FARAPAYAMAK_PASSWORD', ''),
             'line' => env('FARAPAYAMAK_LINE','' ),
+        ],
+        'farazsms' => [
+            'username' => env('FARAZSMS_USERNAME', ''),
+            'password' => env('FARAZSMS_PASSWORD', ''),
+            'line' => env('FARAZSMS_LINE','' ),
         ]
     ],
 ];
