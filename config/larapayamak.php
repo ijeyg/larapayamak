@@ -23,6 +23,11 @@ return [
             'username' => env('FARAZSMS_USERNAME', ''),
             'password' => env('FARAZSMS_PASSWORD', ''),
             'line' => env('FARAZSMS_LINE','' ),
+        ],
+        'niksms' => [
+            'username' => env('NIKSMS_USERNAME', ''),
+            'password' => env('NIKSMS_PASSWORD', ''),
+            'line' => env('NIKSMS_LINE','' ),
         ]
     ],
 ];
