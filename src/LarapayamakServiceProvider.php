@@ -3,6 +3,7 @@
 namespace Ijeyg\Larapayamak;
 
 use Ijeyg\Larapayamak\Gateways\Farapayamak;
+use Ijeyg\Larapayamak\Gateways\FarazSms;
 use Ijeyg\Larapayamak\Gateways\Smsir;
 use Ijeyg\Larapayamak\Services\SmsService;
 use Spatie\LaravelPackageTools\Package;
@@ -48,6 +49,12 @@ class LarapayamakServiceProvider extends PackageServiceProvider
                 );
             case 'melipayamak':
                 return new Farapayamak(
+                    $providerConfig['username'],
+                    $providerConfig['line'],
+                    $providerConfig['password']
+                );
+            case 'farazsms':
+                return new FarazSms(
                     $providerConfig['username'],
                     $providerConfig['line'],
                     $providerConfig['password']
