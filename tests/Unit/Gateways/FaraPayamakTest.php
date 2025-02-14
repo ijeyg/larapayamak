@@ -2,13 +2,12 @@
 
 namespace Ijeyg\Larapayamak\Tests\Unit\Gateways;
 
-use Ijeyg\Larapayamak\Gateways\Melipayamak;
+use Ijeyg\Larapayamak\Gateways\FaraPayamak;
 use Ijeyg\Larapayamak\Services\HttpClientService;
 use Ijeyg\Larapayamak\Tests\TestCase;
 use Mockery;
 
-
-class MelipayamakTest extends TestCase
+class FaraPayamakTest extends TestCase
 {
 
     public function getEnvironmentSetUp($app)
@@ -38,9 +37,9 @@ class MelipayamakTest extends TestCase
         $mockHttpClient = Mockery::mock(HttpClientService::class);
         $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['ReturnValue' => 1]); // Simulate a successful response
+            ->andReturn(['RetStatus' => 1]); // Simulate a successful response
 
-        $smsir = new Melipayamak('test_username', 'test_line', 'test_token');
+        $smsir = new FaraPayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -62,9 +61,9 @@ class MelipayamakTest extends TestCase
         $mockHttpClient = Mockery::mock(HttpClientService::class);
         $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['ReturnValue' => 10]); // Simulate unsuccessful response
+            ->andReturn(['RetStatus' => 10]); // Simulate unsuccessful response
 
-        $smsir = new Melipayamak('test_username', 'test_line', 'test_token');
+        $smsir = new FaraPayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -86,10 +85,10 @@ class MelipayamakTest extends TestCase
         $mockHttpClient = Mockery::mock(HttpClientService::class);
         $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['ReturnValue' => 1]); // Simulate a successful response
+            ->andReturn(['RetStatus' => 1]); // Simulate a successful response
 
         $parameters = ['name' => 'John Doe'];
-        $smsir = new Melipayamak('test_username', 'test_line', 'test_token');
+        $smsir = new FaraPayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -111,10 +110,10 @@ class MelipayamakTest extends TestCase
         $mockHttpClient = Mockery::mock(HttpClientService::class);
         $mockHttpClient->shouldReceive('connectViaPost')
             ->once()
-            ->andReturn(['ReturnValue' => 10]); // Simulate unsuccessful response
+            ->andReturn(['RetStatus' => 10]); // Simulate unsuccessful response
 
         $parameters = ['name' => 'John Doe'];
-        $smsir = new Melipayamak('test_username', 'test_line', 'test_token');
+        $smsir = new FaraPayamak('test_username', 'test_line', 'test_token');
         $smsir->setHttpClient($mockHttpClient);
 
         // Act
@@ -132,7 +131,7 @@ class MelipayamakTest extends TestCase
      */
     public function it_sets_parameters_correctly()
     {
-        $smsir = new Melipayamak('test_username', 'test_line', 'test_token');
+        $smsir = new FaraPayamak('test_username', 'test_line', 'test_token');
 
         $reflection = new \ReflectionClass($smsir);
         $method = $reflection->getMethod('setParameters');

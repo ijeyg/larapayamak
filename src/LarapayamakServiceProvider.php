@@ -2,10 +2,11 @@
 
 namespace Ijeyg\Larapayamak;
 
-use Ijeyg\Larapayamak\Gateways\Farapayamak;
+use Ijeyg\Larapayamak\Gateways\FaraPayamak;
 use Ijeyg\Larapayamak\Gateways\FarazSms;
-use Ijeyg\Larapayamak\Gateways\Melipayamak;
+use Ijeyg\Larapayamak\Gateways\MeliPayamak;
 use Ijeyg\Larapayamak\Gateways\NikSms;
+use Ijeyg\Larapayamak\Gateways\PayamResan;
 use Ijeyg\Larapayamak\Gateways\Smsir;
 use Ijeyg\Larapayamak\Services\SmsService;
 use Spatie\LaravelPackageTools\Package;
@@ -44,13 +45,13 @@ class LarapayamakServiceProvider extends PackageServiceProvider
 
         switch ($defaultGateway) {
             case 'farapayamak':
-                return new Farapayamak(
+                return new FaraPayamak(
                     $providerConfig['username'],
                     $providerConfig['line'],
                     $providerConfig['password']
                 );
             case 'melipayamak':
-                return new Melipayamak(
+                return new MeliPayamak(
                     $providerConfig['username'],
                     $providerConfig['line'],
                     $providerConfig['password']
@@ -66,6 +67,10 @@ class LarapayamakServiceProvider extends PackageServiceProvider
                     $providerConfig['username'],
                     $providerConfig['line'],
                     $providerConfig['password']
+                );
+            case 'payamresan':
+                return new PayamResan(
+                    $providerConfig['api_token'],
                 );
             default:
                 return new Smsir(
