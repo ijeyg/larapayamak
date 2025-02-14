@@ -14,6 +14,18 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class LarapayamakServiceProvider extends PackageServiceProvider
 {
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/larapayamak.php' => config_path('larapayamak.php'),
+        ], 'config');
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/larapayamak.php',
+            'larapayamak'
+        );
+    }
+
     public function configurePackage(Package $package): void
     {
         $package
