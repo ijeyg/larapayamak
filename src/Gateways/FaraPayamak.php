@@ -7,7 +7,7 @@ use Ijeyg\Larapayamak\Services\HttpClientService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class Farapayamak extends AbstractSmsProvider
+class FaraPayamak extends AbstractSmsProvider
 {
     private mixed $username;
     private mixed $line;

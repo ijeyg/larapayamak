@@ -46,7 +46,7 @@ class FarazSms extends AbstractSmsProvider
             if (!is_array($response) || $response[0] !== 'OK') {
                 return response()->json([
                     'success' => false,
-                    'message' => $response[1] ?? 'خطایی رخ داده است'
+                    'message' => $response[1] ?? 'There is an error while processing your request'
                 ], status: Response::HTTP_BAD_REQUEST);
             }
 
@@ -86,7 +86,7 @@ class FarazSms extends AbstractSmsProvider
             if (!isset($response['status']) || $response['status'] !== 'OK') {
                 return response()->json([
                     'success' => false,
-                    'message' => $response['message'] ?? 'خطایی رخ داده است'
+                    'message' => $response['message'] ?? 'There is an error while processing your request'
                 ], status: Response::HTTP_BAD_REQUEST);
             }
 

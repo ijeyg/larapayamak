@@ -28,6 +28,9 @@ return [
             'username' => env('NIKSMS_USERNAME', ''),
             'password' => env('NIKSMS_PASSWORD', ''),
             'line' => env('NIKSMS_LINE','' ),
+        ],
+        'payamresan' => [
+            'api_token' => env('PAYAMRESAN_APITOKEN', ''),
         ]
     ],
 ];
