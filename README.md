@@ -51,9 +51,27 @@ php artisan vendor:publish --tag="larapayamak-views"
 
 ## Usage
 
+Set your default gateway in `.env`:
+
+```env
+SMS_GATEWAY=smsir
+```
+
+Use default gateway:
+
 ```php
-$larapayamak = new ijeyg\Larapayamak();
-echo $larapayamak->echoPhrase('Hello, ijeyg!');
+use Ijeyg\Larapayamak\Facades\Larapayamak;
+
+Larapayamak::sendSimpleMessage('09121111111', 'Hello');
+Larapayamak::sendPatternMessage('09121111111', '1234', ['code' => '7788']);
+```
+
+Use specific gateway at runtime:
+
+```php
+Larapayamak::gateway('smsir')->sendSimpleMessage('09121111111', 'Hello');
+Larapayamak::gateway('smsir')->sendPatternMessage('09121111111', '1234', ['code' => '7788']);
+Larapayamak::gateway('farazsms')->sendSimpleMessage('09121111111', 'Hello');
 ```
 
 ## Testing

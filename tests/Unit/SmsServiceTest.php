@@ -3,6 +3,7 @@
 namespace Ijeyg\Larapayamak\Tests\Unit;
 
 use Ijeyg\Larapayamak\Contracts\SmsProviderInterface;
+use Ijeyg\Larapayamak\Services\GatewayManager;
 use Ijeyg\Larapayamak\Services\SmsService;
 use Ijeyg\Larapayamak\Tests\TestCase;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +25,8 @@ class SmsServiceTest extends TestCase
             ->with('9121111111', 'hello')
             ->andReturn(new JsonResponse(['success' => true], 200));
 
-        $service = new SmsService($provider);
+        $gatewayManager = Mockery::mock(GatewayManager::class);
+        $service = new SmsService($provider, $gatewayManager);
         $response = $service->sendSimpleMessage('9121111111', 'hello');
 
         $this->assertTrue($response->getData(true)['success']);
@@ -39,9 +41,26 @@ class SmsServiceTest extends TestCase
             ->with('9121111111', '100', ['code' => '1234'])
             ->andReturn(new JsonResponse(['success' => true], 200));
 
-        $service = new SmsService($provider);
+        $gatewayManager = Mockery::mock(GatewayManager::class);
+        $service = new SmsService($provider, $gatewayManager);
         $response = $service->sendPatternMessage('9121111111', '100', ['code' => '1234']);
 
         $this->assertTrue($response->getData(true)['success']);
+    }
+
+    /** @test */
+    public function it_resolves_named_gateway_from_gateway_manager()
+    {
+        $provider = Mockery::mock(SmsProviderInterface::class);
+        $namedProvider = Mockery::mock(SmsProviderInterface::class);
+        $gatewayManager = Mockery::mock(GatewayManager::class);
+        $gatewayManager->shouldReceive('gateway')
+            ->once()
+            ->with('smsir')
+            ->andReturn($namedProvider);
+
+        $service = new SmsService($provider, $gatewayManager);
+
+        $this->assertSame($namedProvider, $service->gateway('smsir'));
     }
 }

@@ -2,12 +2,7 @@
 
 namespace Ijeyg\Larapayamak;
 
-use Ijeyg\Larapayamak\Gateways\FaraPayamak;
-use Ijeyg\Larapayamak\Gateways\FarazSms;
-use Ijeyg\Larapayamak\Gateways\MeliPayamak;
-use Ijeyg\Larapayamak\Gateways\NikSms;
-use Ijeyg\Larapayamak\Gateways\PayamResan;
-use Ijeyg\Larapayamak\Gateways\Smsir;
+use Ijeyg\Larapayamak\Services\GatewayManager;
 use Ijeyg\Larapayamak\Services\SmsService;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -37,61 +32,21 @@ class LarapayamakServiceProvider extends PackageServiceProvider
     {
         parent::register();
 
+        $this->app->singleton(GatewayManager::class, function ($app) {
+            return new GatewayManager();
+        });
+
         $this->app->singleton(SmsService::class, function ($app) {
-            return new SmsService($this->createSmsProvider($app));
+            $gatewayManager = $app->make(GatewayManager::class);
+
+            return new SmsService(
+                $gatewayManager->gateway(),
+                $gatewayManager
+            );
         });
 
         $this->app->singleton('larapayamak', function ($app) {
             return $app->make(SmsService::class);
         });
-    }
-
-    protected function createSmsProvider($app)
-    {
-        $defaultGateway = config('larapayamak.default');
-        $providerConfig = config("larapayamak.gateways.{$defaultGateway}");
-
-        if (is_null($providerConfig)) {
-            throw new \Exception("Configuration for the gateway '{$defaultGateway}' not found.");
-        }
-
-        switch ($defaultGateway) {
-            case 'farapayamak':
-                return new FaraPayamak(
-                    $providerConfig['username'],
-                    $providerConfig['line'],
-                    $providerConfig['password']
-                );
-            case 'melipayamak':
-                return new MeliPayamak(
-                    $providerConfig['username'],
-                    $providerConfig['line'],
-                    $providerConfig['password']
-                );
-            case 'farazsms':
-                return new FarazSms(
-                    $providerConfig['username'],
-                    $providerConfig['password'],
-                    $providerConfig['line']
-                );
-            case 'niksms':
-                return new NikSms(
-                    $providerConfig['username'],
-                    $providerConfig['line'],
-                    $providerConfig['password']
-                );
-            case 'payamresan':
-                return new PayamResan(
-                    $providerConfig['api_token'],
-                );
-            case 'smsir':
-                return new Smsir(
-                    $providerConfig['username'],
-                    $providerConfig['line'],
-                    $providerConfig['token']
-                );
-            default:
-                throw new \InvalidArgumentException("Unsupported gateway '{$defaultGateway}'.");
-        }
     }
 }

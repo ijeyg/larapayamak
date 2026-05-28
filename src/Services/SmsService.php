@@ -9,9 +9,12 @@ class SmsService
 {
     protected SmsProviderInterface $provider;
 
-    public function __construct(SmsProviderInterface $provider)
+    protected GatewayManager $gatewayManager;
+
+    public function __construct(SmsProviderInterface $provider, GatewayManager $gatewayManager)
     {
         $this->provider = $provider;
+        $this->gatewayManager = $gatewayManager;
     }
 
     public function sendSimpleMessage($phoneNumber, $message): JsonResponse
@@ -22,5 +25,10 @@ class SmsService
     public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
     {
         return $this->provider->sendPatternMessage($phoneNumber, $pattern, $parameters);
+    }
+
+    public function gateway(string $name): SmsProviderInterface
+    {
+        return $this->gatewayManager->gateway($name);
     }
 }
