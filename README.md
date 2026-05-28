@@ -373,24 +373,24 @@ MIT. See [LICENSE.md](LICENSE.md).
 
 # مستندات فارسی
 
-## معرفی
-**لاراپیامک** یک پکیج حرفه‌ای لاراول برای ارسال پیامک از طریق چندین سرویس‌دهنده ایرانی است.  
-هدف اصلی پکیج: یک API یکپارچه برای ارسال پیامک و امکان جابه‌جایی سریع بین درگاه‌ها بدون تغییر در منطق اصلی پروژه.
+## معرفی پکیج
+**Larapayamak** یک پکیج لاراول برای ارسال پیامک از چند سرویس‌دهنده ایرانی با یک API یکپارچه است.  
+فلسفه پکیج ساده است: کد کسب‌وکار شما نباید با عوض شدن Provider تغییر کند.
 
 ## چرا Larapayamak؟ 🌟
-- کاهش وابستگی به یک سرویس‌دهنده
-- امکان سوییچ سریع بین درگاه‌ها در زمان اجرا
-- مناسب برای پروژه‌های فروشگاهی، SaaS و سامانه‌های OTP
-- کدنویسی تمیز با قرارداد (Contract) مشخص
+- یک API ثابت برای چند سرویس‌دهنده
+- سوییچ سریع درگاه در زمان اجرا با `gateway(...)`
+- مناسب OTP، فروشگاه اینترنتی و پیامک‌های تراکنشی
+- استفاده راحت با Facade یا Dependency Injection
+- ساختار تمیز بر پایه Contract
 
 ---
 
 ## ویژگی‌ها
 - پشتیبانی از چند درگاه پیامکی ایرانی
-- ارسال پیامک ساده و الگو/پترن
-- انتخاب درگاه پیش‌فرض از `.env`
-- انتخاب درگاه پویا با `gateway('name')`
-- پشتیبانی از Facade و Dependency Injection
+- ارسال پیامک ساده و پترن (در درگاه‌های پشتیبانی‌شده)
+- انتخاب درگاه پیش‌فرض با `.env`
+- تغییر درگاه به‌صورت پویا داخل کد
 - Auto-discovery در لاراول
 - پوشش تست و CI
 
@@ -402,26 +402,22 @@ MIT. See [LICENSE.md](LICENSE.md).
 |---|---|---|---|
 | SMS.ir (`smsir`) | ✅ | ✅ | مناسب OTP و پیامک تراکنشی |
 | FaraPayamak (`farapayamak`) | ✅ | ✅ | مبتنی بر API پایامک |
-| FarazSms (`farazsms`) | ✅ | ✅ | پشتیبانی از چند گیرنده در ارسال ساده |
-| MeliPayamak (`melipayamak`) | ✅ | ✅ | ساختار مشابه API پایامک |
-| NikSms (`niksms`) | ✅ | ❌ | متد پترن در پکیج پیاده‌سازی نشده |
+| FarazSms (`farazsms`) | ✅ | ✅ | در پیامک ساده، ورودی آرایه گیرنده هم پشتیبانی می‌شود |
+| MeliPayamak (`melipayamak`) | ✅ | ✅ | ساختار نزدیک به FaraPayamak |
+| NikSms (`niksms`) | ✅ | ❌ | متد پترن در خود پکیج پیاده‌سازی نشده |
 | PayamResan (`payamresan`) | ✅ | ✅ | مبتنی بر API Key |
 
 ---
 
-## نصب
+## نصب و راه‌اندازی
 
 ```bash
 composer require ijeyg/larapayamak
 ```
 
-پکیج به‌صورت خودکار Service Provider و Facade را ثبت می‌کند.
+پکیج به‌صورت خودکار Service Provider و Facade را رجیستر می‌کند.
 
----
-
-## تنظیمات
-
-انتشار فایل تنظیمات:
+### انتشار فایل تنظیمات
 
 ```bash
 php artisan vendor:publish --provider="Ijeyg\Larapayamak\LarapayamakServiceProvider" --tag="config"
@@ -437,7 +433,13 @@ config/larapayamak.php
 
 ## متغیرهای محیطی
 
-نمونه کامل:
+درگاه پیش‌فرض:
+
+```env
+SMS_GATEWAY=smsir
+```
+
+نمونه کامل برای همه درگاه‌ها:
 
 ```env
 SMS_GATEWAY=smsir
@@ -469,16 +471,16 @@ PAYAMRESAN_APITOKEN=
 
 ## معماری پکیج
 
-### فلسفه طراحی
-- لایه سرویس (`SmsService`) فقط API واحد ارائه می‌دهد.
-- لایه مدیریت درگاه (`GatewayManager`) انتخاب Provider را انجام می‌دهد.
-- هر Provider قرارداد مشترک `SmsProviderInterface` را پیاده‌سازی می‌کند.
+### ایده اصلی
+- `SmsService` نقطه ورود اصلی برای ارسال پیامک است.
+- `GatewayManager` Provider مناسب را انتخاب می‌کند.
+- همه Providerها قرارداد `SmsProviderInterface` را پیاده‌سازی می‌کنند.
 
-### جریان اجرا
+### روند اجرا
 1. فراخوانی از Facade یا سرویس تزریق‌شده
-2. انتخاب Provider بر اساس درگاه پیش‌فرض یا `gateway()`
-3. ارسال درخواست HTTP به سرویس‌دهنده
-4. برگشت `JsonResponse`
+2. انتخاب درگاه پیش‌فرض یا درگاه مشخص‌شده با `gateway()`
+3. ارسال درخواست به سرویس‌دهنده
+4. دریافت خروجی به‌صورت `JsonResponse`
 
 ---
 
@@ -512,16 +514,16 @@ class SmsController
 
 ---
 
-## استفاده چنددرگاهی (ویژگی اصلی) 🔁
+## استفاده از چند Gateway (ویژگی کلیدی) 🔁
 
 ```php
 use Ijeyg\Larapayamak\Facades\Larapayamak;
 
 Larapayamak::gateway('smsir')->sendPatternMessage('09121111111', '1234', ['code' => '7788']);
-Larapayamak::gateway('farazsms')->sendSimpleMessage('09121111111', 'سلام از فراز اس‌ام‌اس');
+Larapayamak::gateway('farazsms')->sendSimpleMessage('09121111111', 'سلام از فراز');
 ```
 
-### مثال برای هر درگاه
+### نمونه برای هر درگاه
 
 ```php
 Larapayamak::gateway('smsir')->sendSimpleMessage('09121111111', 'سلام از SMS.ir');
@@ -545,7 +547,7 @@ Larapayamak::gateway('melipayamak')->sendPatternMessage('09121111111', '1234', [
 
 ```php
 Larapayamak::gateway('niksms')->sendSimpleMessage('09121111111', 'سلام از نیک‌اس‌ام‌اس');
-// متد پترن برای niksms در پکیج پیاده‌سازی نشده است.
+// متد پترن برای niksms در این پکیج پیاده‌سازی نشده است.
 ```
 
 ```php
@@ -556,9 +558,9 @@ Larapayamak::gateway('payamresan')->sendPatternMessage('09121111111', 'TemplateK
 ---
 
 ## مدیریت خطا
-- در خطاهای شبکه/سرویس‌دهنده، خروجی به‌صورت `JsonResponse` با `success=false` برمی‌گردد.
-- درگاه نامعتبر با `InvalidArgumentException` خطا می‌دهد.
-- پیشنهاد: همیشه مقدار `success` را بررسی کنید.
+- در خطاهای شبکه یا خطاهای سرویس‌دهنده، خروجی `JsonResponse` با `success=false` برمی‌گردد.
+- اگر نام درگاه نامعتبر باشد، `InvalidArgumentException` دریافت می‌کنید.
+- بهتر است همیشه مقدار `success` را چک کنید.
 
 ```php
 $response = Larapayamak::gateway('smsir')->sendSimpleMessage('09121111111', 'test');
@@ -571,13 +573,9 @@ if (($data['success'] ?? false) !== true) {
 
 ---
 
-## سناریوهای واقعی
-- ارسال OTP برای ورود/ثبت‌نام
-- اطلاع‌رسانی وضعیت سفارش در فروشگاه آنلاین
-- اعلان‌های تراکنشی در سامانه‌های مالی
-- کمپین‌های پیامکی با قابلیت تغییر سریع سرویس‌دهنده
+## مثال‌های واقعی
 
-### مثال OTP
+### OTP
 
 ```php
 Larapayamak::gateway('smsir')->sendPatternMessage('09121111111', 'OTP_TEMPLATE', [
@@ -585,7 +583,7 @@ Larapayamak::gateway('smsir')->sendPatternMessage('09121111111', 'OTP_TEMPLATE',
 ]);
 ```
 
-### مثال فروشگاهی
+### فروشگاه اینترنتی
 
 ```php
 Larapayamak::gateway('farazsms')->sendSimpleMessage(
@@ -594,19 +592,15 @@ Larapayamak::gateway('farazsms')->sendSimpleMessage(
 );
 ```
 
----
-
-## استراتژی چند‌سرویس‌دهنده (Multi-provider Strategy)
-برای پایداری بیشتر:
-- یک درگاه پیش‌فرض در `.env` قرار دهید.
-- برای ماژول‌های خاص، درگاه را در لحظه اجرا تغییر دهید (`gateway(...)`).
+### استراتژی چند‌سرویس‌دهنده
+اگر پایداری ارسال برای شما مهم است:
+- یک درگاه پیش‌فرض در `.env` داشته باشید.
+- برای سناریوهای خاص (مثل OTP یا پیامک تبلیغاتی)، درگاه را با `gateway(...)` تغییر دهید.
 - منطق دامنه را مستقل از Provider نگه دارید.
 
-این الگو مخصوص کسب‌وکارهایی است که نیاز به انعطاف عملیاتی بالا دارند.
-
 ---
 
-## تست و کیفیت
+## تست‌ها و کیفیت کد
 
 ```bash
 composer test:ci
@@ -614,25 +608,31 @@ composer analyse
 vendor/bin/pint --test
 ```
 
-ابزارها:
+ابزارهای کنترل کیفیت:
 - Pest
 - PHPStan
 - Laravel Pint
-- GitHub Actions (Matrix)
+- GitHub Actions (Matrix CI)
 
 ---
 
 ## نسخه‌های پشتیبانی‌شده
 - PHP: `^8.2`
 - Laravel: `10` و `11`
-- Laravel 12: در حال بررسی، پشتیبانی رسمی اعلام نشده
+- Laravel 12: فعلاً رسمی نیست و در حد بررسی/تست است
 
 ---
 
-## مشارکت
-Pull Request و Issue خوشحال‌مان می‌کند.
+## تغییرات
+برای مشاهده تغییرات هر نسخه، فایل [CHANGELOG.md](CHANGELOG.md) را بررسی کنید.
 
----
+## مشارکت‌کنندگان
+برای مشارکت در توسعه، لطفاً راهنمای مشارکت را بررسی کنید و Pull Request بفرستید.  
+لیست مشارکت‌کنندگان پروژه در GitHub قابل مشاهده است.
+
+## امنیت
+اگر مشکل امنیتی پیدا کردید، لطفاً آن را عمومی منتشر نکنید و از طریق ایمیل زیر اطلاع دهید:  
+`javadgeravand96@gmail.com`
 
 ## لایسنس
-MIT
+توسعه و انتشار این پکیج تحت لایسنس [MIT](LICENSE.md) انجام می‌شود.
