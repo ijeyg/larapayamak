@@ -8,7 +8,6 @@ use Ijeyg\Larapayamak\Tests\TestCase;
 use Illuminate\Http\JsonResponse;
 use Mockery;
 
-
 class PayamResanTest extends TestCase
 {
     protected function tearDown(): void
@@ -90,5 +89,43 @@ class PayamResanTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertFalse($responseData['success']);
         $this->assertEquals(400, $response->status());
+    }
+
+    /** @test */
+    public function it_handles_exceptions_in_simple_message()
+    {
+        $mockHttpClient = Mockery::mock(HttpClientService::class);
+        $mockHttpClient->shouldReceive('connectViaPost')
+            ->once()
+            ->andThrow(new \Exception('Transport error'));
+
+        $smsProvider = new PayamResan('test_api_key');
+        $smsProvider->setHttpClient($mockHttpClient);
+
+        $response = $smsProvider->sendSimpleMessage('9121111111', 'Test Message');
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertFalse($responseData['success']);
+        $this->assertEquals('Transport error', $responseData['message']);
+        $this->assertEquals(500, $response->status());
+    }
+
+    /** @test */
+    public function it_handles_exceptions_in_pattern_message()
+    {
+        $mockHttpClient = Mockery::mock(HttpClientService::class);
+        $mockHttpClient->shouldReceive('connectViaGet')
+            ->once()
+            ->andThrow(new \Exception('Transport error'));
+
+        $smsProvider = new PayamResan('test_api_key');
+        $smsProvider->setHttpClient($mockHttpClient);
+
+        $response = $smsProvider->sendPatternMessage('9121111111', '1234', ['p1' => 'value1']);
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertFalse($responseData['success']);
+        $this->assertEquals('Transport error', $responseData['message']);
+        $this->assertEquals(500, $response->status());
     }
 }

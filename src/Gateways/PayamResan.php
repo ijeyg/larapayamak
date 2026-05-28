@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PayamResan extends AbstractSmsProvider
 {
     private string $apiKey;
+
     private string $baseUrl = 'http://api.sms-webservice.com/api/V3/';
 
     public function __construct($apiKey)
@@ -27,16 +28,16 @@ class PayamResan extends AbstractSmsProvider
                 'ApiKey' => $this->apiKey,
                 'Text' => $message,
                 'Sender' => 0,
-                'Recipients' => array_map(fn($number) => ['Destination' => $number, 'UserTraceId' => 0], $recipients),
+                'Recipients' => array_map(fn ($number) => ['Destination' => $number, 'UserTraceId' => 0], $recipients),
             ], [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ]);
 
-            if (!isset($response['Result'])) {
+            if (! isset($response['Result'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => $response ?? 'There is an error while processing your request'
+                    'message' => $response ?? 'There is an error while processing your request',
                 ], Response::HTTP_BAD_REQUEST);
             }
 
@@ -47,7 +48,7 @@ class PayamResan extends AbstractSmsProvider
         } catch (\Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -61,14 +62,16 @@ class PayamResan extends AbstractSmsProvider
                 'Destination' => $phoneNumber,
             ], $parameters));
 
-            $response = $this->httpClientService->connectViaGet($this->baseUrl . 'SendTokenSingle?' . $queryParams, [
-                'Accept' => 'application/json',
-            ]);
+            $response = $this->httpClientService->connectViaGet(
+                $this->baseUrl.'SendTokenSingle?'.$queryParams,
+                [],
+                ['Accept' => 'application/json']
+            );
 
-            if (!isset($response['Result'])) {
+            if (! isset($response['Result'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => $response ?? 'There is an error while processing your request'
+                    'message' => $response ?? 'There is an error while processing your request',
                 ], Response::HTTP_BAD_REQUEST);
             }
 
@@ -79,7 +82,7 @@ class PayamResan extends AbstractSmsProvider
         } catch (\Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

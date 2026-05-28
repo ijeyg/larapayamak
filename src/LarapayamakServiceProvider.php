@@ -14,14 +14,14 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class LarapayamakServiceProvider extends PackageServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/larapayamak.php' => config_path('larapayamak.php'),
+            __DIR__.'/../config/larapayamak.php' => config_path('larapayamak.php'),
         ], 'config');
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/larapayamak.php',
+            __DIR__.'/../config/larapayamak.php',
             'larapayamak'
         );
     }
@@ -33,7 +33,7 @@ class LarapayamakServiceProvider extends PackageServiceProvider
             ->hasConfigFile();
     }
 
-    public function register()
+    public function register(): void
     {
         parent::register();
 
@@ -71,8 +71,8 @@ class LarapayamakServiceProvider extends PackageServiceProvider
             case 'farazsms':
                 return new FarazSms(
                     $providerConfig['username'],
-                    $providerConfig['line'],
-                    $providerConfig['password']
+                    $providerConfig['password'],
+                    $providerConfig['line']
                 );
             case 'niksms':
                 return new NikSms(
@@ -84,12 +84,14 @@ class LarapayamakServiceProvider extends PackageServiceProvider
                 return new PayamResan(
                     $providerConfig['api_token'],
                 );
-            default:
+            case 'smsir':
                 return new Smsir(
                     $providerConfig['username'],
                     $providerConfig['line'],
                     $providerConfig['token']
                 );
+            default:
+                throw new \InvalidArgumentException("Unsupported gateway '{$defaultGateway}'.");
         }
     }
 }

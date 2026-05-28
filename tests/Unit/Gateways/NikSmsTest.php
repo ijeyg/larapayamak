@@ -18,9 +18,9 @@ class NikSmsTest extends TestCase
             'default' => 'niksms',
             'gateways' => [
                 'smsir' => [
-                    'username' => "",
-                    'token' => "",
-                    'line' => "",
+                    'username' => '',
+                    'token' => '',
+                    'line' => '',
                 ],
             ],
         ]);
@@ -31,6 +31,7 @@ class NikSmsTest extends TestCase
         Mockery::close(); // Ensure Mockery resources are properly released after each test
     }
 
+    /** @test */
     public function it_sends_a_simple_message_successfully()
     {
         // Arrange

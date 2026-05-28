@@ -12,25 +12,25 @@ return [
         'farapayamak' => [
             'username' => env('FARAPAYAMAK_USERNAME', ''),
             'password' => env('FARAPAYAMAK_PASSWORD', ''),
-            'line' => env('FARAPAYAMAK_LINE','' ),
+            'line' => env('FARAPAYAMAK_LINE', ''),
         ],
         'melipayamak' => [
-            'username' => env('FARAPAYAMAK_USERNAME', ''),
-            'password' => env('FARAPAYAMAK_PASSWORD', ''),
-            'line' => env('FARAPAYAMAK_LINE','' ),
+            'username' => env('MELIPAYAMAK_USERNAME', ''),
+            'password' => env('MELIPAYAMAK_PASSWORD', ''),
+            'line' => env('MELIPAYAMAK_LINE', ''),
         ],
         'farazsms' => [
             'username' => env('FARAZSMS_USERNAME', ''),
             'password' => env('FARAZSMS_PASSWORD', ''),
-            'line' => env('FARAZSMS_LINE','' ),
+            'line' => env('FARAZSMS_LINE', ''),
         ],
         'niksms' => [
             'username' => env('NIKSMS_USERNAME', ''),
             'password' => env('NIKSMS_PASSWORD', ''),
-            'line' => env('NIKSMS_LINE','' ),
+            'line' => env('NIKSMS_LINE', ''),
         ],
         'payamresan' => [
             'api_token' => env('PAYAMRESAN_APITOKEN', ''),
-        ]
+        ],
     ],
 ];
