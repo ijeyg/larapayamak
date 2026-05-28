@@ -10,8 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 class FarazSms extends AbstractSmsProvider
 {
     private mixed $username;
+
     private mixed $password;
+
     private mixed $from;
+
     private string $baseUrl = 'https://ippanel.com/';
 
     public function __construct($username, $password, $from)
@@ -23,56 +26,54 @@ class FarazSms extends AbstractSmsProvider
     }
 
     /**
-     * @param array|string $phoneNumber
-     * @param string $message
-     * @return JsonResponse
+     * @param  array|string  $phoneNumber
+     * @param  string  $message
      */
     public function sendSimpleMessage($phoneNumber, $message): JsonResponse
     {
         try {
             $recipients = is_array($phoneNumber) ? $phoneNumber : [$phoneNumber];
 
-            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'services.jspd', [
+            $response = $this->httpClientService->connectViaPost($this->baseUrl.'services.jspd', [
                 'uname' => $this->username,
                 'pass' => $this->password,
                 'from' => $this->from,
                 'message' => $message,
                 'to' => json_encode($recipients),
-                'op' => 'send'
+                'op' => 'send',
             ], [
                 'Accept' => 'application/json',
             ]);
 
-            if (!is_array($response) || $response[0] !== 'OK') {
+            if (! is_array($response) || $response[0] !== 'OK') {
                 return response()->json([
                     'success' => false,
-                    'message' => $response[1] ?? 'There is an error while processing your request'
+                    'message' => $response[1] ?? 'There is an error while processing your request',
                 ], status: Response::HTTP_BAD_REQUEST);
             }
 
             return response()->json([
                 'success' => true,
-                'message' => $response[1]
+                'message' => $response[1],
             ], status: Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * @param string $phoneNumber
-     * @param string $pattern
-     * @param array $parameters
-     * @return JsonResponse
+     * @param  string  $phoneNumber
+     * @param  string  $pattern
+     * @param  array  $parameters
      */
     public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
     {
         try {
-            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'patterns/pattern', [
+            $response = $this->httpClientService->connectViaPost($this->baseUrl.'patterns/pattern', [
                 'username' => $this->username,
                 'password' => $this->password,
                 'from' => $this->from,
@@ -83,10 +84,10 @@ class FarazSms extends AbstractSmsProvider
                 'Accept' => 'application/json',
             ]);
 
-            if (!isset($response['status']) || $response['status'] !== 'OK') {
+            if (! isset($response['status']) || $response['status'] !== 'OK') {
                 return response()->json([
                     'success' => false,
-                    'message' => $response['message'] ?? 'There is an error while processing your request'
+                    'message' => $response['message'] ?? 'There is an error while processing your request',
                 ], status: Response::HTTP_BAD_REQUEST);
             }
 
@@ -97,7 +98,7 @@ class FarazSms extends AbstractSmsProvider
         } catch (\Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

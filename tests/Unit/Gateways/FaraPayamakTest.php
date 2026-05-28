@@ -9,7 +9,6 @@ use Mockery;
 
 class FaraPayamakTest extends TestCase
 {
-
     public function getEnvironmentSetUp($app)
     {
         // Correct configuration
@@ -17,17 +16,19 @@ class FaraPayamakTest extends TestCase
             'default' => 'farapayamak',
             'gateways' => [
                 'farapayamak' => [
-                    'username' => "",
-                    'password' => "",
-                    'line' =>"",
+                    'username' => '',
+                    'password' => '',
+                    'line' => '',
                 ],
             ],
         ]);
     }
+
     public function tearDown(): void
     {
         Mockery::close(); // Ensure Mockery resources are properly released after each test
     }
+
     /**
      * @test
      */

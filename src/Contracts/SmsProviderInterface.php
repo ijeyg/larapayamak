@@ -8,6 +8,5 @@ interface SmsProviderInterface
 {
     public function sendSimpleMessage($phoneNumber, $message): JsonResponse;
 
-    public function sendPatternMessage($phoneNumber,$pattern,$parameters): JsonResponse;
-
+    public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse;
 }

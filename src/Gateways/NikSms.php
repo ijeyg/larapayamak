@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 class NikSms extends AbstractSmsProvider
 {
     private mixed $username;
+
     private mixed $line;
+
     private mixed $password;
 
     private string $baseUrl = 'http://niksms.com/fa/PublicApi/';
@@ -26,7 +28,7 @@ class NikSms extends AbstractSmsProvider
     public function sendSimpleMessage($phoneNumber, $message): JsonResponse
     {
         try {
-            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'GroupSms', [
+            $response = $this->httpClientService->connectViaPost($this->baseUrl.'GroupSms', [
                 'username' => $this->username,
                 'password' => $this->password,
                 'message' => $message,
@@ -41,32 +43,27 @@ class NikSms extends AbstractSmsProvider
             if ($response['status'] !== 'ok') {
                 return response()->json([
                     'success' => false,
-                    'message' => $response['error']
+                    'message' => $response['error'],
                 ], status: Response::HTTP_BAD_REQUEST);
             }
+
             return response()->json([
-                'success' => true
+                'success' => true,
             ], status: Response::HTTP_OK);
 
         } catch (\Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @param $phoneNumber
-     * @param $pattern
-     * @param $parameters
-     * @return JsonResponse
-     */
     public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
     {
         return response()->json([
             'success' => false,
-            'message' => "This Method is not implemented yet."
+            'message' => 'This Method is not implemented yet.',
         ], status: Response::HTTP_BAD_REQUEST);
 
     }

@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 class MeliPayamak extends AbstractSmsProvider
 {
     private mixed $username;
+
     private mixed $line;
+
     private mixed $password;
 
     private string $baseUrl = 'https://rest.payamak-panel.com/api/SendSMS/';
@@ -26,58 +28,23 @@ class MeliPayamak extends AbstractSmsProvider
     public function sendSimpleMessage($phoneNumber, $message): JsonResponse
     {
         try {
-            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'SendSMS', [
+            $response = $this->httpClientService->connectViaPost($this->baseUrl.'SendSMS', [
                 'password' => $this->password,
                 'username' => $this->username,
                 'from' => $this->line,
                 'to' => $phoneNumber,
                 'text' => $message,
-                'isflash' => 'false'
+                'isflash' => 'false',
             ], [
                 'Accept' => 'application/json',
             ]);
             if ($response['ReturnValue'] !== 1) {
                 return response()->json([
                     'success' => false,
-                    'message' => "Error number is :". $response['ReturnValue']
+                    'message' => 'Error number is :'.$response['ReturnValue'],
                 ], status: Response::HTTP_BAD_REQUEST);
             }
-            return response()->json([
-                'success' => true
-            ], status: Response::HTTP_OK);
 
-        } catch (\Exception $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => $exception->getMessage()
-            ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * @param $phoneNumber
-     * @param $pattern
-     * @param $parameters
-     * @return JsonResponse
-     */
-    public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
-    {
-        try {
-            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'BaseServiceNumber', [
-                'username' => $this->username,
-                'password' => $this->password,
-                'to' => $phoneNumber,
-                'bodyId' => $pattern,
-                'text' => $this->setParameters($parameters)
-            ], [
-                'Accept' => 'application/json',
-            ]);
-            if ($response['ReturnValue'] !== 1) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Error number is :". $response['ReturnValue']
-                ], status: Response::HTTP_BAD_REQUEST);
-            }
             return response()->json([
                 'success' => true,
             ], status: Response::HTTP_OK);
@@ -85,15 +52,42 @@ class MeliPayamak extends AbstractSmsProvider
         } catch (\Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @param array $parameters
-     * @return string
-     */
+    public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
+    {
+        try {
+            $response = $this->httpClientService->connectViaPost($this->baseUrl.'BaseServiceNumber', [
+                'username' => $this->username,
+                'password' => $this->password,
+                'to' => $phoneNumber,
+                'bodyId' => $pattern,
+                'text' => $this->setParameters($parameters),
+            ], [
+                'Accept' => 'application/json',
+            ]);
+            if ($response['ReturnValue'] !== 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error number is :'.$response['ReturnValue'],
+                ], status: Response::HTTP_BAD_REQUEST);
+            }
+
+            return response()->json([
+                'success' => true,
+            ], status: Response::HTTP_OK);
+
+        } catch (\Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private function setParameters(array $parameters): string
     {
         $array = null;
@@ -103,10 +97,11 @@ class MeliPayamak extends AbstractSmsProvider
             $index++;
             if ($index === $count) {
                 $array .= $value;
-            }else{
-                $array .= $value . ';';
+            } else {
+                $array .= $value.';';
             }
         }
+
         return $array;
     }
 }

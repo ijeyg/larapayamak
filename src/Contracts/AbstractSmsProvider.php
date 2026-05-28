@@ -8,12 +8,13 @@ use Illuminate\Http\JsonResponse;
 abstract class AbstractSmsProvider implements SmsProviderInterface
 {
     protected HttpClientService $httpClientService;
+
     public function setHttpClient(HttpClientService $httpClientService): void
     {
         $this->httpClientService = $httpClientService;
     }
 
-    public abstract function sendSimpleMessage($phoneNumber, $message): JsonResponse;
+    abstract public function sendSimpleMessage($phoneNumber, $message): JsonResponse;
 
-    public abstract function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse;
+    abstract public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse;
 }

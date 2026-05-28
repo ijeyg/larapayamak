@@ -11,7 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 class Smsir extends AbstractSmsProvider
 {
     private mixed $username;
+
     private mixed $line;
+
     private mixed $token;
 
     private string $baseUrl = 'https://api.sms.ir/v1/';
@@ -27,7 +29,7 @@ class Smsir extends AbstractSmsProvider
     public function sendSimpleMessage($phoneNumber, $message): JsonResponse
     {
         try {
-            $response = $this->httpClientService->connectViaGet($this->baseUrl . 'send', [
+            $response = $this->httpClientService->connectViaGet($this->baseUrl.'send', [
                 'password' => $this->token,
                 'username' => $this->username,
                 'line' => $this->line,
@@ -40,31 +42,26 @@ class Smsir extends AbstractSmsProvider
             if ($response['status'] !== 1) {
                 return response()->json([
                     'success' => false,
-                    'message' => $response['message']
+                    'message' => $response['message'],
                 ], status: Response::HTTP_BAD_REQUEST);
             }
+
             return response()->json([
-                'success' => true
+                'success' => true,
             ], status: Response::HTTP_OK);
 
         } catch (Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @param $phoneNumber
-     * @param $pattern
-     * @param $parameters
-     * @return JsonResponse
-     */
     public function sendPatternMessage($phoneNumber, $pattern, $parameters): JsonResponse
     {
         try {
-            $response = $this->httpClientService->connectViaPost($this->baseUrl . 'send/verify', [
+            $response = $this->httpClientService->connectViaPost($this->baseUrl.'send/verify', [
                 'Parameters' => $this->setParameters($parameters),
                 'Mobile' => $phoneNumber,
                 'TemplateId' => $pattern,
@@ -75,31 +72,29 @@ class Smsir extends AbstractSmsProvider
             if ($response['status'] !== 1) {
                 return response()->json([
                     'success' => false,
-                    'message' => $response['message']
+                    'message' => $response['message'],
                 ], status: Response::HTTP_BAD_REQUEST);
             }
+
             return response()->json([
                 'success' => true,
-             ], status: Response::HTTP_OK);
+            ], status: Response::HTTP_OK);
 
         } catch (Exception $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @param array $parameters
-     * @return array
-     */
     private function setParameters(array $parameters): array
     {
         $array = null;
         foreach ($parameters as $key => $value) {
             $array[] = ['Name' => $key, 'Value' => $value];
         }
+
         return $array;
     }
 }

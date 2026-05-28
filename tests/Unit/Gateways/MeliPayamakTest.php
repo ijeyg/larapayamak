@@ -7,10 +7,8 @@ use Ijeyg\Larapayamak\Services\HttpClientService;
 use Ijeyg\Larapayamak\Tests\TestCase;
 use Mockery;
 
-
 class MeliPayamakTest extends TestCase
 {
-
     public function getEnvironmentSetUp($app)
     {
         // Correct configuration
@@ -18,17 +16,19 @@ class MeliPayamakTest extends TestCase
             'default' => 'farapayamak',
             'gateways' => [
                 'farapayamak' => [
-                    'username' => "",
-                    'password' => "",
-                    'line' =>"",
+                    'username' => '',
+                    'password' => '',
+                    'line' => '',
                 ],
             ],
         ]);
     }
+
     public function tearDown(): void
     {
         Mockery::close(); // Ensure Mockery resources are properly released after each test
     }
+
     /**
      * @test
      */

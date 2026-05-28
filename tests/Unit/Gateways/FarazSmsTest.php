@@ -3,7 +3,6 @@
 namespace Ijeyg\Larapayamak\Tests\Unit\Gateways;
 
 use Ijeyg\Larapayamak\Gateways\FarazSms;
-use Ijeyg\Larapayamak\Gateways\Smsir;
 use Ijeyg\Larapayamak\Services\HttpClientService;
 use Ijeyg\Larapayamak\Tests\TestCase;
 use Illuminate\Http\JsonResponse;
@@ -18,9 +17,9 @@ class FarazSmsTest extends TestCase
             'default' => 'farazsms',
             'gateways' => [
                 'smsir' => [
-                    'username' => "",
-                    'token' => "",
-                    'line' => "",
+                    'username' => '',
+                    'token' => '',
+                    'line' => '',
                 ],
             ],
         ]);

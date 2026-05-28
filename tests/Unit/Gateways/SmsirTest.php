@@ -16,17 +16,19 @@ class SmsirTest extends TestCase
             'default' => 'farapayamak',
             'gateways' => [
                 'smsir' => [
-                    'username' => "",
-                    'token' => "",
-                    'line' =>"",
+                    'username' => '',
+                    'token' => '',
+                    'line' => '',
                 ],
             ],
         ]);
     }
+
     public function tearDown(): void
     {
         Mockery::close(); // Ensure Mockery resources are properly released after each test
     }
+
     /**
      * @test
      */
@@ -139,7 +141,7 @@ class SmsirTest extends TestCase
         $parameters = ['name' => 'John Doe', 'code' => '1234'];
         $expected = [
             ['Name' => 'name', 'Value' => 'John Doe'],
-            ['Name' => 'code', 'Value' => '1234']
+            ['Name' => 'code', 'Value' => '1234'],
         ];
 
         $result = $method->invokeArgs($smsir, [$parameters]);
