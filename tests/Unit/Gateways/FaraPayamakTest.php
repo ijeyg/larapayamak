@@ -24,7 +24,7 @@ class FaraPayamakTest extends TestCase
         ]);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Mockery::close(); // Ensure Mockery resources are properly released after each test
     }

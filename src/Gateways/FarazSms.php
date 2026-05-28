@@ -19,7 +19,7 @@ class FarazSms extends AbstractSmsProvider
 
     public function __construct($username, $password, $from)
     {
-        parent::setHttpClient(new HttpClientService());
+        parent::setHttpClient(new HttpClientService);
         $this->username = $username;
         $this->password = $password;
         $this->from = $from;

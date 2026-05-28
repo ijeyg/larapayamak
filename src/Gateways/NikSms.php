@@ -19,7 +19,7 @@ class NikSms extends AbstractSmsProvider
 
     public function __construct($username, $line, $password)
     {
-        parent::setHttpClient(new HttpClientService());
+        parent::setHttpClient(new HttpClientService);
         $this->username = $username;
         $this->line = $line;
         $this->password = $password;

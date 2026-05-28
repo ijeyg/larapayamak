@@ -20,7 +20,7 @@ class Smsir extends AbstractSmsProvider
 
     public function __construct($username, $line, $token)
     {
-        parent::setHttpClient(new HttpClientService());
+        parent::setHttpClient(new HttpClientService);
         $this->username = $username;
         $this->line = $line;
         $this->token = $token;

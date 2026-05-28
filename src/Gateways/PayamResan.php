@@ -15,7 +15,7 @@ class PayamResan extends AbstractSmsProvider
 
     public function __construct($apiKey)
     {
-        parent::setHttpClient(new HttpClientService());
+        parent::setHttpClient(new HttpClientService);
         $this->apiKey = $apiKey;
     }
 

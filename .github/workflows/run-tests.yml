@@ -52,14 +52,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require --dev "orchestra/testbench:${{ matrix.testbench }}" "phpstan/phpstan:^1.11" --no-interaction --no-update
+          composer update --with-all-dependencies --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
 
       - name: Static analysis
-        run: composer analyse
+        run: vendor/bin/phpstan analyse src tests --no-progress --memory-limit=512M
 
       - name: Execute tests
         run: composer test:ci
@@ -81,8 +82,9 @@ jobs:
 
       - name: Probe install with Laravel 12
         run: |
-          composer require "laravel/framework:^12.0" "orchestra/testbench:^10.0" --no-interaction --no-update
-          composer update --prefer-dist --no-interaction
+          composer require "laravel/framework:^12.0" --no-interaction --no-update
+          composer require --dev "orchestra/testbench:^10.0" "phpstan/phpstan:^1.11" --no-interaction --no-update
+          composer update --with-all-dependencies --prefer-dist --no-interaction
 
       - name: Run tests if install succeeded
         run: composer test:ci

@@ -33,7 +33,7 @@ class LarapayamakServiceProvider extends PackageServiceProvider
         parent::register();
 
         $this->app->singleton(GatewayManager::class, function ($app) {
-            return new GatewayManager();
+            return new GatewayManager;
         });
 
         $this->app->singleton(SmsService::class, function ($app) {
